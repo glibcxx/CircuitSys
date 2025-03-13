@@ -5,9 +5,9 @@
 
 class CapacitorComponent : public ProducerComponent
 {
-public:
     const CircuitComponentType mCircuitComponentType = CircuitComponentType::CapacitorComponent;
 
+public:
     virtual CircuitComponentType getCircuitComponentType() const override;
 
     virtual FacingID getPoweroutDirection() const;

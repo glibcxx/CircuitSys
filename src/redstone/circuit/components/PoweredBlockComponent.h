@@ -6,10 +6,7 @@
 class PoweredBlockComponent : public BaseCircuitComponent
 {
 public:
-    PoweredBlockComponent(uint8_t connections)
-    {
-        this->mIsFirstTime = false;
-    }
+    PoweredBlockComponent(uint8_t connections = 255) { this->mIsFirstTime = false; }
 
     virtual bool allowConnection(CircuitSceneGraph &graph, const CircuitTrackingInfo &info, bool &bDirectlyPowered) override;
 

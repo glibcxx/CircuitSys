@@ -33,7 +33,7 @@ void BaseCircuitComponent::addSourceItem(const CircuitComponentList::Item &info)
         }
     }
     this->mSources.push_back(info);
-    this->mDestinationList.emplace(this, 0);
+    ++info.mComponent->mDestinationList[this];
 }
 
 bool BaseCircuitComponent::trackPowerSource(const CircuitTrackingInfo &info, int dampening, bool directlyPowered, int data, bool duplicates)

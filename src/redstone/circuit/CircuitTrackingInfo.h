@@ -5,6 +5,9 @@
 #include "Facing.h"
 #include "components/BaseCircuitComponent.h"
 
+/**
+ * @brief 追踪表，用于搜索元件时记录元件信息。包含一个信号源信息，和最新搜索到的3个元件
+ */
 class CircuitTrackingInfo
 {
 public:

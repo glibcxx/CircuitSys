@@ -8,7 +8,13 @@ protected:
     CircuitComponentList mSideComponents{};
 
 public:
-    virtual ~SidePoweredComponent() {}
+    virtual ~SidePoweredComponent()
+    {
+        for (auto &&iter : this->mSideComponents)
+        {
+            iter.mComponent->mDestinationList.erase(this);
+        }
+    }
 
     virtual bool canConsumePowerAnyDirection() const override { return true; }
 

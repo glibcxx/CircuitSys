@@ -195,6 +195,11 @@ BaseCircuitComponent *CircuitSceneGraph::getComponent(const BlockPos &pos, Circu
     return nullptr;
 }
 
+CircuitSceneGraph::ComponentMap &CircuitSceneGraph::getComponents_FastLookupByPos()
+{
+    return this->mAllComponents;
+}
+
 CircuitComponentList &CircuitSceneGraph::getComponents_FastIterationAcrossActive()
 {
     return this->mActiveComponents;
@@ -233,10 +238,9 @@ void CircuitSceneGraph::setPendingAddAsNewlyLoaded()
     }
 }
 
-void CircuitSceneGraph::preSetupPoweredBlocks(const ChunkPos &pos)
+void CircuitSceneGraph::preSetupPoweredBlocks(const ChunkPos &chunkPos)
 {
-    BlockPos blockPos(pos.x << 4, 0, pos.z << 4);
-    auto     chunkPosIter = this->mComponentsToReEvaluate.find(blockPos);
+    auto chunkPosIter = this->mComponentsToReEvaluate.find({chunkPos, 0});
     if (chunkPosIter != mComponentsToReEvaluate.end())
     {
         auto &blocks = chunkPosIter->second;
@@ -508,7 +512,7 @@ BaseCircuitComponent *CircuitSceneGraph::addIfPoweredBlockAt(BlockSource &source
         BlockProperty property = block.getRedstoneProperty(source, pos);
         if (block.isSolid() || property == BlockProperty::Power_BlockDown)
         {
-            std::unique_ptr unique_ptr_PB = std::make_unique<PoweredBlockComponent>(Redstone::SIGNAL_MAX);
+            std::unique_ptr unique_ptr_PB = std::make_unique<PoweredBlockComponent>();
             poweredBlock = unique_ptr_PB.get();
             this->mAllComponents.insert({pos, std::move(unique_ptr_PB)});
             if (property == BlockProperty::Power_BlockDown)
