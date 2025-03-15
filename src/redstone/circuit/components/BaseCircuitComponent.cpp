@@ -38,7 +38,7 @@ void BaseCircuitComponent::addSourceItem(const CircuitComponentList::Item &info)
 
 bool BaseCircuitComponent::trackPowerSource(const CircuitTrackingInfo &info, int dampening, bool directlyPowered, int data, bool duplicates)
 {
-    int newDampening = info.mDampening - 1 > 0 ? info.mDampening - 1 : 0;
+    int newDampening = dampening - 1 > 0 ? dampening - 1 : 0;
     for (auto &iter : this->mSources)
     {
         if (iter.mPos != info.mPower.mPos || duplicates && iter.mDirection != info.mCurrent.mDirection)
