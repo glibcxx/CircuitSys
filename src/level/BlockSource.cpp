@@ -2,19 +2,13 @@
 
 #include "block/Block.h"
 
-std::unordered_map<BlockPos, SharedPtr<BlockLegacy>> dummyBlockLegacys;
-std::unordered_map<BlockPos, Block>                  dummyBlocks;
-
 const Block &BlockSource::getBlock(const BlockPos &pos) const
 {
-    auto block = dummyBlocks.find(pos);
-    if (block == dummyBlocks.end())
-    {
-        auto legacy = dummyBlockLegacys.emplace(pos, SharedPtr<BlockLegacy>::make(pos.toString(), (int)pos.hashCode()));
-        dummyBlocks.emplace(pos, legacy.first->second.createWeakPtr());
-        block = dummyBlocks.find(pos);
-    }
-    return block->second;
+    auto iter = this->mBlockMap.find(pos);
+    if (iter == this->mBlockMap.end())
+        return *FakeBlocks::mAir;
+    else
+        return *iter->second;
 }
 
 LevelChunk *BlockSource::getChunkAt(const BlockPos &pos) const
@@ -30,6 +24,11 @@ bool BlockSource::hasChunksAt(const BlockPos &pos, int r) const
 bool BlockSource::areChunksFullyLoaded(const BlockPos &pos, int r)
 {
     return true; /* dummy */
+}
+
+void BlockSource::setBlock(const BlockPos &pos, const Block &block)
+{
+    this->mBlockMap[pos] = &block;
 }
 
 const BlockPos &BlockSource::getPlaceChunkPos() const

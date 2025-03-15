@@ -507,17 +507,17 @@ BaseCircuitComponent *CircuitSceneGraph::addIfPoweredBlockAt(BlockSource &source
 {
     PoweredBlockComponent *poweredBlock = nullptr;
     const Block           &block = source.getBlock(pos);
-    if (block.getLegacyBlock() != *BedrockBlockTypes::mAir)
+    if (block != *FakeBlocks::mAir)
     {
         BlockProperty property = block.getRedstoneProperty(source, pos);
-        if (block.isSolid() || property == BlockProperty::Power_BlockDown)
+        if (block.isSolid() || (bool)(property & BlockProperty::Power_BlockDown))
         {
             std::unique_ptr unique_ptr_PB = std::make_unique<PoweredBlockComponent>();
             poweredBlock = unique_ptr_PB.get();
             this->mAllComponents.insert({pos, std::move(unique_ptr_PB)});
-            if (property == BlockProperty::Power_BlockDown)
+            if ((bool)(property & BlockProperty::Power_BlockDown))
                 poweredBlock->setAllowPowerUp(true);
-            if (property == BlockProperty::Power_NO)
+            if ((bool)(property & BlockProperty::Power_NO))
                 poweredBlock->setAllowAsPowerSource(false);
         }
     }

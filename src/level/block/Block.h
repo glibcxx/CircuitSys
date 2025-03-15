@@ -4,14 +4,6 @@
 #include <vector>
 #include <functional>
 #include "BlockLegacy.h"
-#include "SharedPtr.h"
-
-namespace BedrockBlockTypes
-{
-    inline SharedPtr<BlockLegacy> mAir_ = SharedPtr<BlockLegacy>::make("air", 0);
-    inline WeakPtr<BlockLegacy>   mAir = mAir_.createWeakPtr();
-
-}; // namespace BedrockBlockTypes
 
 class Block
 {
@@ -21,7 +13,12 @@ public:
 
     bool isSolid() const { return this->mLegacyBlock->mSolid; }
 
+    bool operator==(const Block &rhs) const { return *this->mLegacyBlock == *rhs.mLegacyBlock; }
+
+    bool operator!=(const Block &rhs) const { return *this->mLegacyBlock != *rhs.mLegacyBlock; }
+
     void onRedstoneUpdate(BlockSource &region, const BlockPos &pos, int strength, bool isFirstTime) const { this->mLegacyBlock->onRedstoneUpdate(region, pos, strength, isFirstTime); }
+    void tick(BlockSource &region, const BlockPos &pos, std::mt19937 &random) const { this->mLegacyBlock->tick(region, pos, random); }
 
     BlockProperty getRedstoneProperty(BlockSource &region, const BlockPos &pos) const { return this->mLegacyBlock->getRedstoneProperty(region, pos); }
 

@@ -1,8 +1,11 @@
 #pragma once
 
-#include <cstdint>
+#include <string>
 #include <functional>
+#include <random>
 #include "level/BlockPos.h"
+#include "FakeBlocks.h"
+#include "util/EnumCast.h"
 
 class BlockSource;
 class Block;
@@ -56,38 +59,32 @@ enum class BlockProperty : int64_t
     PreventsJumping = 0x80000000000,
     ContainsHoney = 0x100000000000,
     Slime = 0x200000000000,
+    SculkReplaceable = 0x400000000000,
+    Climbable = 0x800000000000,
+    CanHaltWhenClimbing = 0x1000000000000
 };
 
-enum class BlockSupportType : int
+inline BlockProperty operator&(BlockProperty lhs, BlockProperty b) { return BlockProperty{enum_cast(lhs) & enum_cast(b)}; }
+
+inline BlockProperty operator|(BlockProperty lhs, BlockProperty b) { return BlockProperty{enum_cast(lhs) | enum_cast(b)}; }
+
+inline BlockProperty &operator|=(BlockProperty &lhs, BlockProperty rhs)
 {
-    Center = 0,
-    Edge = 1,
-    Any = 2,
-};
+    lhs = BlockProperty{enum_cast(lhs) | enum_cast(rhs)};
+    return lhs;
+}
 
 class BlockLegacy
 {
 public:
     friend class Block;
 
-    static inline const float SIZE_OFFSET = 0.0001f;
+    BlockLegacy(const std::string &nameId, int id) :
+        mNameId(nameId), mId(id) {}
 
-    static const int UPDATE_NEIGHBORS = 1;
-    static const int UPDATE_CLIENTS = 2;
-    static const int UPDATE_INVISIBLE = 4;
-    static const int UPDATE_ITEM_DATA = 16;
-    static const int UPDATE_NONE = 4;
-    static const int UPDATE_ALL = 3;
-    static const int TILE_NUM_SHIFT = 12;
-    static const int NUM_LEGACY_BLOCK_TYPES = 512;
+    bool operator==(const BlockLegacy &rhs) const { return this->mId == rhs.mId; }
 
-    BlockLegacy(const std::string &nameId, int id) {}
-
-    bool operator==(const BlockLegacy &rhs) const { return this == &rhs; }
-
-    bool operator!=(const BlockLegacy &rhs) const { return this != &rhs; }
-
-    void createBlockPermutations(uint32_t latestUpdaterVersion);
+    bool operator!=(const BlockLegacy &rhs) const { return this->mId != rhs.mId; }
 
     ~BlockLegacy() = default;
 
@@ -101,8 +98,12 @@ public:
 
     virtual void onRedstoneUpdate(BlockSource &region, const BlockPos &pos, int strength, bool isFirstTime) const {}
 
+    virtual void tick(BlockSource &region, const BlockPos &pos, std::mt19937 &random) {}
+
     virtual BlockProperty getRedstoneProperty(BlockSource &region, const BlockPos &pos) const { return this->mProperties; }
 
-    BlockProperty mProperties{BlockProperty::CubeShaped};
-    bool          mSolid = false;
+    const std::string mNameId;
+    const int         mId;
+    BlockProperty     mProperties{BlockProperty::CubeShaped};
+    bool              mSolid = false;
 };
