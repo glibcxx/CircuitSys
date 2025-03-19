@@ -15,7 +15,7 @@ bool ComparatorCapacitor::addSource(CircuitSceneGraph &graph, const CircuitTrack
     FacingID searchDir = info.mCurrent.mDirection;
     if (searchDir == Facing::DOWN || searchDir == Facing::UP)
         return false;
-    if (searchDir != this->getDirection())
+    if (searchDir == this->getDirection())
         return false;
 
     CircuitComponentType instanceID = info.mNearest.mComponent->getCircuitComponentType();
@@ -26,7 +26,7 @@ bool ComparatorCapacitor::addSource(CircuitSceneGraph &graph, const CircuitTrack
     {
         if (info.mNearest.mTypeID != CircuitComponentType::PoweredBlockComponent || info.mNearest.mComponent->hasDirectPower())
         {
-            return this->trackPowerSource(info, dampening, bDirectlyPowered, 0, true);
+            this->trackPowerSource(info, dampening, bDirectlyPowered, 0, true);
         }
     }
     return false;
@@ -134,6 +134,7 @@ void ComparatorCapacitor::updateDependencies(CircuitSceneGraph &system, const Bl
         CircuitComponentList::Item &systemComponent = *iter;
         if (systemComponent.mComponent->canStopPower())
         {
+            systemComponent.mComponent->mDestinationList.erase(this);
             iter = this->mSources.erase(iter);
         }
         else if (iter->mDirection == Facing::OPPOSITE_FACING[this->getDirection()])

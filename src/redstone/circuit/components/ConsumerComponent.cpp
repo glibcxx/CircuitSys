@@ -31,7 +31,7 @@ bool ConsumerComponent::addSource(CircuitSceneGraph &graph, const CircuitTrackin
                 bDirectlyPowered = info.mCurrent.mDirection == dirPower;
                 this->mPromotedToProducer = bDirectlyPowered;
             }
-            if (info.mCurrent.mDirection == info.mNearest.mComponent->getDirection())
+            if (!this->mAcceptSameDirection && info.mCurrent.mDirection == info.mNearest.mComponent->getDirection())
                 return false;
             break;
         }
@@ -51,7 +51,7 @@ bool ConsumerComponent::addSource(CircuitSceneGraph &graph, const CircuitTrackin
     return this->trackPowerSource(info, dampening, bDirectlyPowered, id == CircuitComponentType::ConsumerComponent) && bDirectlyPowered;
 }
 
-bool ConsumerComponent::allowConnection(CircuitSceneGraph &Graph, const CircuitTrackingInfo &info, bool &bDirectlyPowered)
+bool ConsumerComponent::allowConnection(CircuitSceneGraph &graph, const CircuitTrackingInfo &info, bool &bDirectlyPowered)
 {
     CircuitComponentType id = info.mCurrent.mTypeID;
 
