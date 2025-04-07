@@ -33,7 +33,7 @@ public:
             auto tmp = this->ptr;
             this->ptr = nullptr;
             if (tmp)
-                tmp->~T();
+                delete tmp;
         }
         return this->weak_count <= 0;
     }

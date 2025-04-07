@@ -1,6 +1,7 @@
 #include "Vec2.h"
 
 #include <cmath>
+#include <limits>
 
 inline const Vec2 Vec2::LOWEST = {std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest()};
 inline const Vec2 Vec2::MAX = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};

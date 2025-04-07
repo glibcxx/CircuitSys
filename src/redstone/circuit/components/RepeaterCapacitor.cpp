@@ -108,7 +108,7 @@ void RepeaterCapacitor::extendPulse()
     }
 }
 
-inline FacingID RepeaterCapacitor::getPoweroutDirection() const
+FacingID RepeaterCapacitor::getPoweroutDirection() const
 {
     return Facing::OPPOSITE_FACING[this->getDirection()];
 }

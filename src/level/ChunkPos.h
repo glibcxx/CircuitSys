@@ -74,9 +74,9 @@ public:
     BlockPos getMiddleBlockPosition(int y) const;
 };
 
-inline const ChunkPos ChunkPos::INVALID = {(int)0x80000000, (int)0x80000000};
-inline const ChunkPos ChunkPos::MIN = {(int)0x80000000, (int)0x80000000};
-inline const ChunkPos ChunkPos::MAX = {__INT32_MAX__, __INT32_MAX__};
+inline const ChunkPos ChunkPos::INVALID = {INT_MIN, INT_MIN};
+inline const ChunkPos ChunkPos::MIN = {INT_MIN, INT_MIN};
+inline const ChunkPos ChunkPos::MAX = {INT_MAX, INT_MAX};
 
 namespace std
 {

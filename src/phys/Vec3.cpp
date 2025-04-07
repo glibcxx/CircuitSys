@@ -202,7 +202,7 @@ Vec3 Vec3::projectOntoLine(const Vec3 &p0, const Vec3 &p1) const
 {
     Vec3 A0 = *this - p0;
     Vec3 ray = p1 - p0;
-    return p0 + ray * (A0 * ray / ray * ray);
+    return p0 + ray * ((A0 * ray) / (ray * ray));
 }
 
 float Vec3::distanceToLineSquared(const Vec3 &p0, const Vec3 &p1) const

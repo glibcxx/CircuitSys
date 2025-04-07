@@ -86,7 +86,7 @@ public:
 
     bool operator!=(const BlockLegacy &rhs) const { return this->mId != rhs.mId; }
 
-    ~BlockLegacy() = default;
+    virtual ~BlockLegacy() = default;
 
     BlockLegacy(const BlockLegacy &other) = delete;
 
